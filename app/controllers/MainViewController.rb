@@ -1,10 +1,11 @@
 class MainViewController < UIViewController
   def initWithNibName(nibName, bundle: bundleName)
     super
-
+    
+    # adding logo label
     magicViewsLabel = UILabel.alloc.initWithFrame [[0,10],[self.view.frame.size.width, 30]]
     magicViewsLabel.setTextAlignment UITextAlignmentCenter
-    magicViewsLabel.setText "Magic Nav Bars"
+    magicViewsLabel.setText "Magic Tabs"
     magicViewsLabel.setFont UIFont.fontWithName("Helvetica", size:24)
     magicViewsLabel.setBackgroundColor UIColor.clearColor
     magicViewsLabel.setTextColor UIColor.whiteColor
@@ -12,19 +13,21 @@ class MainViewController < UIViewController
 
     self.view.setBackgroundColor UIColor.scrollViewTexturedBackgroundColor
 
-    magicView_1 = MagicView.alloc.initWithFrame [[20,200],[280,400]]
+
+    screen_height = UIScreen.mainScreen.bounds.size.height
+    magicView_1 = MagicView.alloc.initWithFrame [[20,200],[280,screen_height]]
     magicView_1.setBackgroundColor UIColor.colorWithRed(246.0/255, green:246.0/255, blue:246.0/255, alpha:1)
     magicView_1.set_z_index 1
     magicView_1.set_view_title "First"
     self.view.addSubview magicView_1
 
-    magicView_2 = MagicView.alloc.initWithFrame [[15,250],[290,400]]
+    magicView_2 = MagicView.alloc.initWithFrame [[15,250],[290,screen_height]]
     magicView_2.setBackgroundColor UIColor.colorWithRed(246.0/255, green:246.0/255, blue:246.0/255, alpha:1)
     magicView_2.set_z_index 2
     magicView_2.set_view_title "Second"
     self.view.addSubview magicView_2
 
-    magicView_3 = MagicView.alloc.initWithFrame [[10,300],[300,400]]
+    magicView_3 = MagicView.alloc.initWithFrame [[10,300],[300,screen_height]]
     magicView_3.setBackgroundColor UIColor.colorWithRed(246.0/255, green:246.0/255, blue:246.0/255, alpha:1)
     magicView_3.set_z_index 3
     magicView_3.set_view_title "Third"
@@ -34,37 +37,33 @@ class MainViewController < UIViewController
     # adding content to magic views
     #
 
-    #don't forget to substract navigation bar height from content view height (-44)
+    # first magiv tab
     magic_content_1 = UIView.alloc.initWithFrame magicView_1.frame
     magic_content_1.frame[0][1] -= 44
     magic_content_1.frame[1][1] -= 44
     label_1 = UILabel.alloc.initWithFrame [[10, 5],[magicView_1.frame.size.width,20]]
     label_1.setText "Content View!"
+    label_1.setBackgroundColor UIColor.clearColor
     label_1.sizeToFit
 
-    textField_1 = UITextField.alloc.initWithFrame [[10,25],[magicView_1.frame.size.width,25]]
+    textField_1 = UITextField.alloc.initWithFrame [[10,25],[200,25]]
     textField_1.setBorderStyle UITextBorderStyleRoundedRect
 
     magic_content_1.addSubview label_1
     magic_content_1.addSubview textField_1
     magicView_1.set_content_view magic_content_1
 
+    #second magic tab
     layout = UICollectionViewFlowLayout.alloc.init
-    #layout.setScrollDirection UICollectionViewScrollDirectionHorizontal
     layout.setItemSize [50, 100]
 
-    collectionFrame = magicView_2.frame
-    collectionFrame[0][1] += 44
-    collectionFrame[1][1] = 100
-    p collectionFrame[1][1]
-    p collectionFrame
-    collectionView = UICollectionView.alloc.initWithFrame([[0,44],[magicView_2.frame.size.width, 100]], collectionViewLayout:layout)
+    collectionView = UICollectionView.alloc.initWithFrame([[5,50],[magicView_2.frame.size.width - 5, 100]], collectionViewLayout:layout)
     collectionView.setDelegate self
     collectionView.setDataSource self
     collectionView.registerClass(UICollectionViewCell, forCellWithReuseIdentifier:"collectionReuseID")
     magicView_2.set_content_view collectionView
-    p collectionView.frame
 
+    #third magic tab
     tableView = UITableView.alloc.initWithFrame magicView_3.frame
     tableView.registerClass(UITableViewCell, forCellReuseIdentifier:"cellReuseID")
     tableView.frame[0][1] -= 44

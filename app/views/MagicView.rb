@@ -68,6 +68,10 @@ class MagicView < UIView
       self.setFrame UIScreen.mainScreen.bounds
       @viewTitle.setCenter [self.frame.size.width * 0.5, @viewTitle.center.y]
       @navigationBarView.setFrame [[0,0],[self.frame.size.width, 44]]
+
+      new_content_frame = @contentView.frame
+      new_content_frame[1][0] = self.frame.size.width
+      @contentView.setFrame new_content_frame
     end
 
     completionAnimation = lambda do |completion|
@@ -90,6 +94,10 @@ class MagicView < UIView
       new_frame[0][0] += 1
       @viewTitle.setCenter [new_frame[1][0] * 0.5, @viewTitle.center.y]
       @navigationBarView.setFrame [[0,0],[new_frame[1][0],44]]
+
+      new_content_frame = @contentView.frame
+      new_content_frame[1][0] = new_frame[1][0]
+      @contentView.setFrame new_content_frame
     end
 
     self.setFrame new_frame
