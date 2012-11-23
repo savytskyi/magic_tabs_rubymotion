@@ -2,6 +2,13 @@ class MainViewController < UIViewController
   def initWithNibName(nibName, bundle: bundleName)
     super
     
+    tabWidth = self.view.frame.size.width * 0.9
+    tabWidthSpacer = 6
+    pointX = (self.view.frame.size.width - tabWidth) / 2
+    screen_height = UIScreen.mainScreen.bounds.size.height
+
+    p "#{tabWidth}, #{tabWidthSpacer}, #{pointX}, #{screen_height}"
+
     # adding logo label
     magicViewsLabel = UILabel.alloc.initWithFrame [[0,10],[self.view.frame.size.width, 30]]
     magicViewsLabel.setTextAlignment UITextAlignmentCenter
@@ -13,26 +20,28 @@ class MainViewController < UIViewController
 
     self.view.setBackgroundColor UIColor.scrollViewTexturedBackgroundColor
 
-
-    screen_height = UIScreen.mainScreen.bounds.size.height
-    magicView_1 = MagicView.alloc.initWithFrame [[20,200],[280,screen_height]]
+    tabZ = 0
+    magicView_1 = MagicView.alloc.initWithFrame [[pointX - (tabWidthSpacer * 0.5) * tabZ,200],[tabWidth + tabWidthSpacer * tabZ,screen_height]]
     magicView_1.setBackgroundColor UIColor.colorWithRed(246.0/255, green:246.0/255, blue:246.0/255, alpha:1)
-    magicView_1.set_z_index 1
+    magicView_1.set_z_index tabZ
     magicView_1.set_view_title "First"
     self.view.addSubview magicView_1
 
-    magicView_2 = MagicView.alloc.initWithFrame [[15,250],[290,screen_height]]
+    tabZ = 1
+    magicView_2 = MagicView.alloc.initWithFrame [[pointX - (tabWidthSpacer * 0.5) * tabZ,250],[tabWidth + tabWidthSpacer * tabZ,screen_height]]
     magicView_2.setBackgroundColor UIColor.colorWithRed(246.0/255, green:246.0/255, blue:246.0/255, alpha:1)
-    magicView_2.set_z_index 2
+    magicView_2.set_z_index tabZ
     magicView_2.set_view_title "Second"
     self.view.addSubview magicView_2
 
-    magicView_3 = MagicView.alloc.initWithFrame [[10,300],[300,screen_height]]
+    tabZ = 2
+    magicView_3 = MagicView.alloc.initWithFrame [[pointX - (tabWidthSpacer * 0.5) * tabZ,300],[tabWidth + tabWidthSpacer * tabZ,screen_height]]
     magicView_3.setBackgroundColor UIColor.colorWithRed(246.0/255, green:246.0/255, blue:246.0/255, alpha:1)
-    magicView_3.set_z_index 3
+    magicView_3.set_z_index tabZ
     magicView_3.set_view_title "Third"
     self.view.addSubview magicView_3
 
+    p "frame #{magicView_3.frame.size.width}, = #{tabWidth + tabWidthSpacer * tabZ}" 
     #
     # adding content to magic views
     #
@@ -41,16 +50,16 @@ class MainViewController < UIViewController
     magic_content_1 = UIView.alloc.initWithFrame magicView_1.frame
     magic_content_1.frame[0][1] -= 44
     magic_content_1.frame[1][1] -= 44
-    label_1 = UILabel.alloc.initWithFrame [[10, 5],[magicView_1.frame.size.width,20]]
-    label_1.setText "Content View!"
-    label_1.setBackgroundColor UIColor.clearColor
-    label_1.sizeToFit
+    label = UILabel.alloc.initWithFrame [[10, 5],[magicView_1.frame.size.width,20]]
+    label.setText "Content View!"
+    label.setBackgroundColor UIColor.clearColor
+    label.sizeToFit
 
-    textField_1 = UITextField.alloc.initWithFrame [[10,25],[200,25]]
-    textField_1.setBorderStyle UITextBorderStyleRoundedRect
+    textField = UITextField.alloc.initWithFrame [[10,25],[200,25]]
+    textField.setBorderStyle UITextBorderStyleRoundedRect
 
-    magic_content_1.addSubview label_1
-    magic_content_1.addSubview textField_1
+    magic_content_1.addSubview label
+    magic_content_1.addSubview textField
     magicView_1.set_content_view magic_content_1
 
     #second magic tab
@@ -67,9 +76,7 @@ class MainViewController < UIViewController
     tableView = UITableView.alloc.initWithFrame magicView_3.frame
     tableView.registerClass(UITableViewCell, forCellReuseIdentifier:"cellReuseID")
     tableView.frame[0][1] -= 44
-    p tableView.frame[1][1]
     tableView.frame[1][1] -= 44
-    p tableView.frame[1][1]
     tableView.setDelegate self
     tableView.setDataSource self
     magicView_3.set_content_view tableView

@@ -8,6 +8,7 @@ class MagicView < UIView
     self.clipsToBounds = true
 
     #setting up shadows, borders, etc
+
     self.layer.shadowColor = UIColor.blackColor.CGColor
     self.layer.shadowOffset = [10,10]
     self.layer.shadowOpacity = 0.5
@@ -19,14 +20,14 @@ class MagicView < UIView
     self.layer.cornerRadius = 3
 
     #setting up fake navigation bar view
-    @navigationBarView = UIView.alloc.initWithFrame [[0,0],[self.bounds.size.width,44]]
+    @navigationBarView = UIView.alloc.initWithFrame [[0,0],[self.frame.size.width,44]]
     @navigationBarView.setBackgroundColor UIColor.colorWithPatternImage UIImage.imageNamed 'navigation_bar_texture.png'
     self.addSubview @navigationBarView
 
     #setting up nav bar and view title
     @viewTitle = UILabel.alloc.initWithFrame [[0,0],[self.frame.size.width, 20]]
     @viewTitle.setCenter [self.frame.size.width * 0.5, @navigationBarView.frame.size.height * 0.5]
-    @viewTitle.setTextAlignment UITextAlignmentCenter
+    @viewTitle.setTextAlignment NSTextAlignmentCenter
     @viewTitle.setFont UIFont.fontWithName("Helvetica", size:20)
     @viewTitle.setTextColor UIColor.whiteColor
     @viewTitle.setBackgroundColor UIColor.clearColor
@@ -43,18 +44,29 @@ class MagicView < UIView
   end
 
   def springBack
+    return if self.frame[0][1] == @first_position[0][1] &&
+      self.frame[1][1] == @first_position[1][1]
+
     springBackAnimation = lambda do 
       self.setFrame @first_position
-    end
-
-    UIView.animateWithDuration(0.2, animations:springBackAnimation)
-
-    otherMagicViews = []
-    superview.subviews.each do |view|
-      if view.is_a? MagicView
-        otherMagicViews << view if view.z_index > @z_index
+      if @navigationBarView.frame[1][0] != @first_position[1][0]
+        nav_frame = [[0,0],[@first_position[1][0],44]] #@navigationBarView.frame
+        @navigationBarView.setFrame nav_frame
+        content_frame = [[0,@navigationBarView.frame[1][1]],[@first_position[1][0], @contentView.frame[1][1]]]
+        @contentView.setFrame content_frame
       end
     end
+
+    #UIView.animateWithDuration(0.2, animations:springBackAnimation)
+
+    completion = lambda do |completed|
+      
+      p "frame: #{self.frame.size.width} first_pos: #{@first_position[1][1]} nav: #{@navigationBarView.frame.size.width}"
+    end
+
+    UIView.animateWithDuration(0.2, animations:springBackAnimation, completion:completion)
+
+    otherMagicViews = getMagicViewsFrom superview
 
     otherMagicViews.each do |view|
       view.springBack
@@ -101,17 +113,10 @@ class MagicView < UIView
     end
 
     self.setFrame new_frame
+    
+    @mainView = false if @mainView && point_y > 0
 
-    if point_y > 0
-      if @mainView
-        #@navigationBarView.setFrame [[0,0],[first_position[1][1],44]]
-        @mainView = false
-      end
-      
-      push_other_views_to point_y
-    else
-      push_other_views_to point_y
-    end
+    push_other_views_to point_y
 
     gesture.setTranslation([0,0], inView:self.superview.superview)
 
@@ -130,12 +135,7 @@ class MagicView < UIView
   end
 
   def push_other_views_to(point_y)
-    otherMagicViews = []
-    superview.subviews.each do |view|
-      if view.is_a? MagicView
-        otherMagicViews << view if view.z_index > @z_index
-      end
-    end
+    otherMagicViews = getMagicViewsFrom superview
 
     otherMagicViews.each do |view|
       new_frame = view.frame
@@ -150,21 +150,26 @@ class MagicView < UIView
   end
 
   def hideOtherViews
-    otherMagicViews = []
-    superview.subviews.each do |view|
-      if view.is_a? MagicView
-        otherMagicViews << view if view.z_index > @z_index
-      end
-    end
+    otherMagicViews = getMagicViewsFrom superview
 
     otherMagicViews.each do |view|
       hideAnimation = lambda do
         new_frame = view.frame
-        new_frame[0][1] = UIScreen.mainScreen.bounds.size.height + (@spacer * view.z_index - @z_index)
+        new_frame[0][1] = UIScreen.mainScreen.bounds.size.height + (@spacer * (view.z_index - @z_index))
         view.setFrame new_frame
       end
       UIView.animateWithDuration(0.2, animations:hideAnimation)
     end    
+  end
+
+  def getMagicViewsFrom(parentView)
+    magic_views = []
+    parentView.subviews.each do |view|
+      if view.is_a? MagicView
+        magic_views << view if view.z_index > @z_index
+      end
+    end
+    magic_views
   end
 
   #
