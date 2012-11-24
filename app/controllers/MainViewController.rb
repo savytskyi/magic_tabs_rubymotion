@@ -3,7 +3,7 @@ class MainViewController < UIViewController
     super
     
     tabWidth = self.view.frame.size.width * 0.9
-    tabWidthSpacer = 6
+    tabWidthSpacer = 5
     pointX = (self.view.frame.size.width - tabWidth) / 2
     screen_height = UIScreen.mainScreen.bounds.size.height
 

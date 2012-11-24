@@ -57,15 +57,16 @@ class MagicView < UIView
       end
     end
 
-    #UIView.animateWithDuration(0.2, animations:springBackAnimation)
-
+    UIView.animateWithDuration(0.2, animations:springBackAnimation)
+    
+=begin
     completion = lambda do |completed|
       
       p "frame: #{self.frame.size.width} first_pos: #{@first_position[1][1]} nav: #{@navigationBarView.frame.size.width}"
     end
 
     UIView.animateWithDuration(0.2, animations:springBackAnimation, completion:completion)
-
+=end
     otherMagicViews = getMagicViewsFrom superview
 
     otherMagicViews.each do |view|
