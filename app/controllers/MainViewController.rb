@@ -3,7 +3,7 @@ class MainViewController < UIViewController
     super
     
     tabWidth = self.view.frame.size.width * 0.9
-    tabWidthSpacer = 5
+    tabWidthSpacer = 9
     pointX = (self.view.frame.size.width - tabWidth) / 2
     screen_height = UIScreen.mainScreen.bounds.size.height
 
@@ -48,7 +48,6 @@ class MainViewController < UIViewController
 
     # first magiv tab
     magic_content_1 = UIView.alloc.initWithFrame magicView_1.frame
-    magic_content_1.frame[0][1] -= 44
     magic_content_1.frame[1][1] -= 44
     label = UILabel.alloc.initWithFrame [[10, 5],[magicView_1.frame.size.width,20]]
     label.setText "Content View!"
@@ -75,7 +74,6 @@ class MainViewController < UIViewController
     #third magic tab
     tableView = UITableView.alloc.initWithFrame magicView_3.frame
     tableView.registerClass(UITableViewCell, forCellReuseIdentifier:"cellReuseID")
-    tableView.frame[0][1] -= 44
     tableView.frame[1][1] -= 44
     tableView.setDelegate self
     tableView.setDataSource self
