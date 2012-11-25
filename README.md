@@ -2,7 +2,7 @@
 
 Available on [Objective-C](https://github.com/savytskyi/MagicTabsObjC) and [RubyMotion](https://github.com/savytskyi/magic_tabs_rubymotion)
 
-![MagicTabs screenshot]()
+![MagicTabs screenshot](https://raw.github.com/savytskyi/magic_tabs_rubymotion/master/magicTabs.jpg)
 
 #How to use
 
@@ -19,9 +19,9 @@ MagicTab's frame is important. If you want more than one magic tab, remember tha
 
 Now we need to assign z index to our tabs:
 
-	magig_tab.set_z_index 1
+	magic_tab.set_z_index 1
 	
-![MagicTabs sizes]()
+![MagicTabs sizes](https://raw.github.com/savytskyi/magic_tabs_rubymotion/master/sizes.jpg)
 
 Now we can add each tab's title and content views. You can use any UIView for a content, but it would be great if its frame will be equal to magicTab's frame.
 
@@ -37,5 +37,6 @@ Now we can add each tab's title and content views. You can use any UIView for a 
     tableView.setDataSource self
     magicTab.set_content_view tableView
     
-    #don't forget to add magit tab to your view
+And don't forget to add magit tab to your view
+
     self.view.addSubview magicTab
