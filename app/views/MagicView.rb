@@ -8,30 +8,26 @@ class MagicView < UIView
     self.clipsToBounds = true
 
     #setting up shadows, borders, etc
-
+    #it's a bit buggy&slow with quartzCore features now, so it was disabled for some time
+=begin
     self.layer.shadowColor = UIColor.blackColor.CGColor
     self.layer.shadowOffset = [10,10]
     self.layer.shadowOpacity = 0.5
     self.layer.shadowRadius = 10.0
-
+=end
     self.layer.borderColor = UIColor.blackColor.CGColor
     self.layer.borderWidth = 1
 
     self.layer.cornerRadius = 3
 
+
     #setting up fake navigation bar view
-    @navigationBarView = UIView.alloc.initWithFrame [[0,0],[self.frame.size.width,44]]
-    @navigationBarView.setBackgroundColor UIColor.colorWithPatternImage UIImage.imageNamed 'navigation_bar_texture.png'
+    @navigationBarView = UINavigationBar.alloc.initWithFrame [[0,0],[self.frame.size.width,44]]
+    @navigationBarView.setTintColor UIColor.blackColor
     self.addSubview @navigationBarView
 
-    #setting up nav bar and view title
-    @viewTitle = UILabel.alloc.initWithFrame [[0,0],[self.frame.size.width, 20]]
-    @viewTitle.setCenter [self.frame.size.width * 0.5, @navigationBarView.frame.size.height * 0.5]
-    @viewTitle.setTextAlignment NSTextAlignmentCenter
-    @viewTitle.setFont UIFont.fontWithName("Helvetica", size:20)
-    @viewTitle.setTextColor UIColor.whiteColor
-    @viewTitle.setBackgroundColor UIColor.clearColor
-    @navigationBarView.addSubview @viewTitle
+    item = UINavigationItem.alloc.init
+    @navigationBarView.setItems [item]
 
     #setting up gestures
     panGesture = UIPanGestureRecognizer.alloc.initWithTarget(self, action:'handlePanGesture:')
@@ -58,15 +54,6 @@ class MagicView < UIView
     end
 
     UIView.animateWithDuration(0.2, animations:springBackAnimation)
-    
-=begin
-    completion = lambda do |completed|
-      
-      p "frame: #{self.frame.size.width} first_pos: #{@first_position[1][1]} nav: #{@navigationBarView.frame.size.width}"
-    end
-
-    UIView.animateWithDuration(0.2, animations:springBackAnimation, completion:completion)
-=end
     otherMagicViews = getMagicViewsFrom superview
 
     otherMagicViews.each do |view|
@@ -79,7 +66,6 @@ class MagicView < UIView
 
     growUpAnimation = lambda do
       self.setFrame UIScreen.mainScreen.bounds
-      @viewTitle.setCenter [self.frame.size.width * 0.5, @viewTitle.center.y]
       @navigationBarView.setFrame [[0,0],[self.frame.size.width, 44]]
 
       new_content_frame = @contentView.frame
@@ -105,7 +91,6 @@ class MagicView < UIView
     if self.frame[1][0] > @first_position[1][0]
       new_frame[1][0] -= 2
       new_frame[0][0] += 1
-      @viewTitle.setCenter [new_frame[1][0] * 0.5, @viewTitle.center.y]
       @navigationBarView.setFrame [[0,0],[new_frame[1][0],44]]
 
       new_content_frame = @contentView.frame
@@ -178,7 +163,7 @@ class MagicView < UIView
   #
 
   def set_view_title(title)
-    @viewTitle.setText title
+    @navigationBarView.topItem.setTitle title
   end
 
   def set_z_index(z_index)
