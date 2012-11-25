@@ -48,8 +48,8 @@ class MagicView < UIView
       if @navigationBarView.frame[1][0] != @first_position[1][0]
         nav_frame = [[0,0],[@first_position[1][0],44]] #@navigationBarView.frame
         @navigationBarView.setFrame nav_frame
-        content_frame = [[0,@navigationBarView.frame[1][1]],[@first_position[1][0], @contentView.frame[1][1]]]
-        @contentView.setFrame content_frame
+
+        @contentView.setFrame @contentView_first_position
       end
     end
 
@@ -69,7 +69,8 @@ class MagicView < UIView
       @navigationBarView.setFrame [[0,0],[self.frame.size.width, 44]]
 
       new_content_frame = @contentView.frame
-      new_content_frame[1][0] = self.frame.size.width
+      border = @first_position[1][0] - @contentView_first_position[1][0]
+      new_content_frame[1][0] = self.frame[1][0] - border
       @contentView.setFrame new_content_frame
     end
 
@@ -94,7 +95,7 @@ class MagicView < UIView
       @navigationBarView.setFrame [[0,0],[new_frame[1][0],44]]
 
       new_content_frame = @contentView.frame
-      new_content_frame[1][0] = new_frame[1][0]
+      new_content_frame[1][0] -= 2
       @contentView.setFrame new_content_frame
     end
 
@@ -179,7 +180,11 @@ class MagicView < UIView
   end
 
   def set_content_view(newContentView)
-    newContentView.setFrame [[0,@navigationBarView.frame.size.height],[self.frame.size.width,self.frame.size.height - @navigationBarView.frame.size.height]]
+    new_frame = newContentView.frame
+    new_frame[0][1] += @navigationBarView.frame.size.height
+    new_frame[1][1] -= @navigationBarView.frame.size.height
+    @contentView_first_position = new_frame
+    newContentView.setFrame new_frame
     @contentView = newContentView
     self.addSubview @contentView
   end

@@ -29,10 +29,9 @@ Now we can add each tab's title and content views. You can use any UIView for a 
 	
 	#adding tableView as a content
 	
-	tableView = UITableView.alloc.initWithFrame magicTab.frame
+	new_frame = [[0,0], [magicTab.frame.size.width, magicTab.frame.size.height]]
+	tableView = UITableView.alloc.initWithFrame new_frame
     tableView.registerClass(UITableViewCell, forCellReuseIdentifier:"cellReuseID")
-    #every magic tab has a title, so we can substract its height from a contentView
-    tableView.frame[1][1] -= 44
     tableView.setDelegate self
     tableView.setDataSource self
     magicTab.set_content_view tableView

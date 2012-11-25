@@ -47,8 +47,8 @@ class MainViewController < UIViewController
     #
 
     # first magiv tab
-    magic_content_1 = UIView.alloc.initWithFrame magicView_1.frame
-    magic_content_1.frame[1][1] -= 44
+    new_frame = [[0,0], [magicView_1.frame.size.width, magicView_1.frame.size.height]]
+    magic_content_1 = UIView.alloc.initWithFrame new_frame
     label = UILabel.alloc.initWithFrame [[10, 5],[magicView_1.frame.size.width,20]]
     label.setText "Content View!"
     label.setBackgroundColor UIColor.clearColor
@@ -65,14 +65,17 @@ class MainViewController < UIViewController
     layout = UICollectionViewFlowLayout.alloc.init
     layout.setItemSize [50, 100]
 
-    collectionView = UICollectionView.alloc.initWithFrame([[5,50],[magicView_2.frame.size.width - 5, 100]], collectionViewLayout:layout)
+    new_frame = [[5,5], [magicView_2.frame.size.width - 10, magicView_2.frame.size.height]]
+    collectionView = UICollectionView.alloc.initWithFrame(new_frame, collectionViewLayout:layout)
+    collectionView.setBackgroundColor UIColor.clearColor
     collectionView.setDelegate self
     collectionView.setDataSource self
     collectionView.registerClass(UICollectionViewCell, forCellWithReuseIdentifier:"collectionReuseID")
     magicView_2.set_content_view collectionView
 
     #third magic tab
-    tableView = UITableView.alloc.initWithFrame magicView_3.frame
+    new_frame = [[0,0], [magicView_2.frame.size.width, magicView_2.frame.size.height]]
+    tableView = UITableView.alloc.initWithFrame new_frame
     tableView.registerClass(UITableViewCell, forCellReuseIdentifier:"cellReuseID")
     tableView.frame[1][1] -= 44
     tableView.setDelegate self
@@ -90,9 +93,10 @@ class MainViewController < UIViewController
     label.setText data[indexPath.row]
     label.setBackgroundColor UIColor.clearColor
     label.sizeToFit
+    label.setCenter [cell.frame[1][0] * 0.5, cell.frame[1][1] * 0.5]
     cell.contentView.addSubview label
 
-    cell.setBackgroundColor UIColor.blueColor
+    cell.setBackgroundColor UIColor.underPageBackgroundColor
     cell
   end
 
@@ -101,7 +105,7 @@ class MainViewController < UIViewController
   end
 
   def collectionView(collectionView, layout:layout, sizeForItemAtIndexPath:indexPath)
-    return [100,50]
+    return [70,50]
   end
 
   def tableView(tableView, numberOfRowsInSection:section)
